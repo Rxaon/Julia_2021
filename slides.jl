@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.16.1
+# v0.17.1
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -21,11 +22,17 @@ macro term_str(str)
 	with_terminal() do
 		print(str)
 	end
-end
+end;
 
 # ╔═╡ 5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
 # Activar modo presentación al cargar cuaderno
 html"<script>present()</script>"
+
+# ╔═╡ c291a723-6073-4f72-a0dd-2ede90f43313
+html"""<p style="font-size:400%;">Taller de introducción a...</p>"""
+
+# ╔═╡ b3801d03-e1f1-45f0-b88f-f450c9346dc4
+Resource("https://julialang.org/assets/infra/logo.svg", :width => 1000)
 
 # ╔═╡ 38d65d9e-1e20-11ec-25ad-914b73e1a7aa
 md"""
@@ -304,9 +311,9 @@ version = "1.0.10+0"
 
 [[GLFW_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libglvnd_jll", "Pkg", "Xorg_libXcursor_jll", "Xorg_libXi_jll", "Xorg_libXinerama_jll", "Xorg_libXrandr_jll"]
-git-tree-sha1 = "dba1e8614e98949abfa60480b13653813d8f0157"
+git-tree-sha1 = "0c603255764a1fa0b61752d2bec14cfbd18f7fe8"
 uuid = "0656b61e-2033-5cc2-a64a-77c0f6c09b89"
-version = "3.3.5+0"
+version = "3.3.5+1"
 
 [[GR]]
 deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Printf", "Random", "Serialization", "Sockets", "Test", "UUIDs"]
@@ -454,9 +461,9 @@ uuid = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 
 [[Libffi_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "761a393aeccd6aa92ec3515e428c26bf99575b3b"
+git-tree-sha1 = "0b4a5d71f3e5200a7dff793393e09dfc2d874290"
 uuid = "e9f186c6-92d2-5b65-8a66-fee21dc1b490"
-version = "3.2.2+0"
+version = "3.2.2+1"
 
 [[Libgcrypt_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgpg_error_jll", "Pkg"]
@@ -980,6 +987,8 @@ version = "0.9.1+5"
 # ╟─b25eb59b-cc0a-4114-a1c9-2d2e8e69682a
 # ╟─8a54d4d1-2205-4e27-96e2-ef7d61b4655a
 # ╟─5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
+# ╟─c291a723-6073-4f72-a0dd-2ede90f43313
+# ╟─b3801d03-e1f1-45f0-b88f-f450c9346dc4
 # ╟─38d65d9e-1e20-11ec-25ad-914b73e1a7aa
 # ╟─21e855da-6750-401a-8eae-e343b2df35d9
 # ╟─4f79ece5-a135-4f93-9273-e17f0e3e9ca0
