@@ -88,7 +88,7 @@ En este taller, todo se realizará desde el navegador, pero todo lo que se expli
 
 # ╔═╡ 83a03ea0-f927-4322-9b03-435a5b37f31d
 md"""
-# ¿Por qué Pluto.jl?
+## ¿Por qué Pluto.jl?
 """
 
 # ╔═╡ 55ee5fb4-1494-4783-8670-c937ac4a56a4
@@ -105,11 +105,11 @@ md"""
 """
 
 # ╔═╡ ea8674c4-b1ac-4731-acc3-1849b06ed008
-contourf(0:0.1:10, 0:0.1:10, (x,y) -> sum(i -> cos(-i/2*y)*sin(i*x), 1:n))
+contourf(0:0.1:10, 0:0.1:10, (x,y) -> sum(i -> cos(i*y)*sin(i*x), 1:n))
 
 # ╔═╡ ff4bebb2-8414-4fec-91f4-74fc35070f95
 md"""
-# ¿La pega?
+## ¿La pega?
 """
 
 # ╔═╡ d7b35ada-f73e-4c82-a89c-b21883010a16
@@ -166,7 +166,7 @@ end
 
 # ╔═╡ 82dbe43b-38c8-4a32-bf5d-c4f92c88ad2b
 md"""
-# Arrays y matrices
+## Arrays y matrices
 """
 
 # ╔═╡ 1846c4ce-2586-4f66-ab98-76d4556b10d8
@@ -233,7 +233,7 @@ end
 
 # ╔═╡ 688e8e2e-b243-4aff-a8c2-d7704962fbe4
 md"""
-# Structs
+## Structs
 """
 
 # ╔═╡ 5392a77c-6176-47b7-aabe-d1f94a710a26
@@ -280,11 +280,168 @@ else
 	""" |> HTML
 end
 
-# ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
-a = "Hello world"
+# ╔═╡ 03300370-c71b-4b2d-824a-3719553d037d
+md"""
+# Estructuras de control
+"""
+
+# ╔═╡ ecbdb86c-2d03-455b-9d48-dea61f60c738
+md"""
+### If
+"""
+
+# ╔═╡ 663e5df4-6540-44aa-8166-48cc8519b241
+if 2 > 3 && error("¡BOOM!")
+	"No estalla porque 2 no es mayor que 3"
+elseif 4 ∈ [1,2,3,4,5]
+	"4 está en el Array"
+else
+	"Pues no ha pasado nada"
+end
+
+# ╔═╡ ff6a5415-0ec0-4d55-8be6-c6be6231ea55
+md"""
+En una línea:
+"""
+
+# ╔═╡ c728f118-ddc4-47b4-bf61-9ee42b04b9fc
+even = iseven(35) ? "Es par" : "No es par"
+
+# ╔═╡ e19bddb5-66b3-461b-b3cd-86565b012be2
+md"""
+**Ejercicio:** ¿Cuánto vale `resultado`?
+
+```julia
+resultado = if !(6 < 5) || error("¡KATAPUM!")
+	42
+else
+	69
+end
+```
+"""
+
+# ╔═╡ fb7e8bb1-7810-4ed2-aa25-d8426e9ecd30
+md"""
+Creo que la respuesta es $(@bind sol_if Select(["Explota", "42", "69", "No quiero opinar"], default="No quiero opinar"))
+"""
+
+# ╔═╡ e2701a41-99c2-4c86-a561-d18b25802808
+if sol_if == "42"
+	"""
+	<p style="background-color: #dbf2d7; padding: 20px;"> Por supuesto, la respuesta para todo, 42. </p>
+	""" |> HTML
+elseif sol_if == "69"
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Nice, pero no. </p>
+	""" |> HTML
+elseif sol_if == "Explota"
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Bomba desactivada por el OR. </p>
+	""" |> HTML
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Porfi, responde. </p>
+	""" |> HTML
+end
+
+# ╔═╡ f18e1787-06e9-4c4b-87ce-c7893a38d379
+md"""
+## While
+"""
+
+# ╔═╡ ac1220f3-61b1-4ca5-8eed-00d14f0a109c
+md"""
+Como el `if` pero en bucle.
+"""
+
+# ╔═╡ ad739252-04af-4fcd-bc57-8a9bb79bc3f0
+let
+	n = 1
+	while n < 10
+		n += 1
+	end
+	n^2
+end
+
+# ╔═╡ 7fde31dd-6cf2-453b-93f8-acb91607a111
+md"""
+Por supuesto, tenemos las expresiones `break` y `continue`.
+"""
+
+# ╔═╡ b85f28bd-5434-421a-8515-28f1cc6d8714
+let
+	n = 0
+	s = 0
+	while n < 100
+		n += 1
+		iseven(n) && continue
+		s += n^2
+	end
+	s
+end
+
+# ╔═╡ 321787be-e811-47ec-8b13-b1588e2367b1
+md"""
+## For
+"""
+
+# ╔═╡ 5d26b738-d2b8-4900-9ccf-9264c4c4392b
+let
+	s = 0
+	for i in 1:2:100
+		s += i^2
+	end
+	s
+end
+
+# ╔═╡ cffeff3e-654b-4dc7-be74-80592cb52574
+Resource("https://i.redd.it/yy5vnik7vxu01.png", :width=>250)
+
+# ╔═╡ 617a97f3-48c4-4aa9-80a9-cc4263da8bee
+sum(i->i^2, 1:2:100)
+
+# ╔═╡ 9bf78030-cd30-488f-b35a-4ffc5e537d79
+md"""
+También nos sirven para crear listas:
+"""
+
+# ╔═╡ 48b835b7-a4fd-4465-bc07-6198cd8b51f8
+[sin(i) for i in 0:0.1:2π]
+
+# ╔═╡ 2c6a456d-d194-4d68-b582-4e25e84fcc59
+md"""
+## Ejercicio
+"""
+
+# ╔═╡ 4a2f8465-44b2-425e-96d6-406dd9f39cbd
+md"""
+**Ejercicio:** Se acerca la Navidad, ayuda a Santa Claus a clasificar a los niños según hayan sido buenos (`Regalos`) o malos (`Carbón`) en su lista `esbueno`. Su criterio es algo arbitrario, son malos los niños cuyo nombre empiece por J.
+
+Ejemplo: `["María", "Juanito"]` -> `[true, false]`
+"""
+
+# ╔═╡ 84f83d91-33e8-4b0a-bd5a-e93723799fb1
+niños = rand(["María", "Juan", "Alejandro", "Pepe", "Jose", "Lucía", "Miriam", "Nina", "Jorge", "Mario", "Nicolás", "Paula"], 1000)
+
+# ╔═╡ b97409f1-69bc-4a16-bdf5-98734b8f5593
+
+
+# ╔═╡ 3015c2e3-26f5-48a7-a497-f56fde124f32
+if @isdefined(esbueno) && esbueno == map(i -> i[1] == 'J' ? "Carbón" : "Regalos", niños)
+	"""
+	<p style="background-color: #dbf2d7; padding: 20px;"> Buen trabajo, tú te quedas en la lista de niños buenos. </p>
+	""" |> HTML
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Todavía no está hecho, a ver si vas a acabar en la lista de niños malos. </p>
+	""" |> HTML
+end
 
 # ╔═╡ 1a29a065-bf3f-4616-8f2d-8e29b69aed78
 a = 2
+
+# ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
+a = "Hello world"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1177,5 +1334,29 @@ version = "0.9.1+5"
 # ╟─ef1c68ad-e694-42c0-a840-90a96f9e9423
 # ╠═1da27f26-53d9-4168-924f-9282aa577e05
 # ╟─2d6ed22c-8152-4b87-b339-4c74b4aa110b
+# ╟─03300370-c71b-4b2d-824a-3719553d037d
+# ╟─ecbdb86c-2d03-455b-9d48-dea61f60c738
+# ╠═663e5df4-6540-44aa-8166-48cc8519b241
+# ╟─ff6a5415-0ec0-4d55-8be6-c6be6231ea55
+# ╠═c728f118-ddc4-47b4-bf61-9ee42b04b9fc
+# ╟─e19bddb5-66b3-461b-b3cd-86565b012be2
+# ╟─fb7e8bb1-7810-4ed2-aa25-d8426e9ecd30
+# ╟─e2701a41-99c2-4c86-a561-d18b25802808
+# ╟─f18e1787-06e9-4c4b-87ce-c7893a38d379
+# ╟─ac1220f3-61b1-4ca5-8eed-00d14f0a109c
+# ╠═ad739252-04af-4fcd-bc57-8a9bb79bc3f0
+# ╟─7fde31dd-6cf2-453b-93f8-acb91607a111
+# ╠═b85f28bd-5434-421a-8515-28f1cc6d8714
+# ╟─321787be-e811-47ec-8b13-b1588e2367b1
+# ╠═5d26b738-d2b8-4900-9ccf-9264c4c4392b
+# ╟─cffeff3e-654b-4dc7-be74-80592cb52574
+# ╠═617a97f3-48c4-4aa9-80a9-cc4263da8bee
+# ╟─9bf78030-cd30-488f-b35a-4ffc5e537d79
+# ╠═48b835b7-a4fd-4465-bc07-6198cd8b51f8
+# ╟─2c6a456d-d194-4d68-b582-4e25e84fcc59
+# ╠═4a2f8465-44b2-425e-96d6-406dd9f39cbd
+# ╟─84f83d91-33e8-4b0a-bd5a-e93723799fb1
+# ╠═b97409f1-69bc-4a16-bdf5-98734b8f5593
+# ╟─3015c2e3-26f5-48a7-a497-f56fde124f32
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
