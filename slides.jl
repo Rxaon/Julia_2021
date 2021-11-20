@@ -104,9 +104,6 @@ md"""
 ### Reactivo
 """
 
-# ╔═╡ ea8674c4-b1ac-4731-acc3-1849b06ed008
-contourf(0:0.1:10, 0:0.1:10, (x,y) -> sum(i -> cos(i*y)*sin(i*x), 1:n))
-
 # ╔═╡ ff4bebb2-8414-4fec-91f4-74fc35070f95
 md"""
 ## ¿La pega?
@@ -394,12 +391,6 @@ let
 	s
 end
 
-# ╔═╡ cffeff3e-654b-4dc7-be74-80592cb52574
-Resource("https://i.redd.it/yy5vnik7vxu01.png", :width=>250)
-
-# ╔═╡ 617a97f3-48c4-4aa9-80a9-cc4263da8bee
-sum(i->i^2, 1:2:100)
-
 # ╔═╡ 9bf78030-cd30-488f-b35a-4ffc5e537d79
 md"""
 También nos sirven para crear listas:
@@ -437,11 +428,241 @@ else
 	""" |> HTML
 end
 
-# ╔═╡ 1a29a065-bf3f-4616-8f2d-8e29b69aed78
-a = 2
+# ╔═╡ aecd946c-98db-4b16-abf6-4559ee02139b
+md"""
+# Funciones
+"""
+
+# ╔═╡ 16d65d01-f3b4-4ba7-8a7e-1d46b1a92a2b
+function sumar1(a, b)
+	a + b
+end
+
+# ╔═╡ 962092e4-dd08-44dd-abb9-ab2fa3adab75
+sumar2(a, b) = a + b
+
+# ╔═╡ 1b1893c6-6375-4a14-b8e2-ebccd00273d5
+sumar3 = (a, b) -> a + b
+
+# ╔═╡ 05707949-1ddd-457d-85c0-f82f66164ce3
+md"""
+**Ejercicio:** Crea una función que detecte si un número es primo llamada `esprimo`.
+"""
+
+# ╔═╡ c86fd424-a551-49b2-95c3-fe57be553175
+
+
+# ╔═╡ b0fba7f9-0331-41b2-88e7-d48dc42b6f19
+if @isdefined(esprimo)
+	if esprimo(1)
+		"""
+		<p style="background-color: #f2d7d7; padding: 20px;"> Upsi, el 1 no es primo. </p>
+		""" |> HTML
+	elseif all(esprimo, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271]) && !any(esprimo, [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21])
+		"""
+		<p style="background-color: #dbf2d7; padding: 20px;"> Bien hecho, parece que detecta bien los primos. </p>
+		""" |> HTML
+	else
+		"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Alguno de los tests falla. </p>
+	""" |> HTML
+	end
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Todavía no has hecho la función. </p>
+	""" |> HTML
+end
+
+# ╔═╡ 1cbe625f-0c12-402e-87a4-550bb04ae4dc
+md"""
+## do
+"""
+
+# ╔═╡ 6de52598-a552-4778-837c-f813b4820c9a
+md"""
+Usamos `do` para pasar una función como primer argumento a otra. Por ejemplo
+"""
+
+# ╔═╡ 8ddcf06f-21ab-4113-b656-676447bf1150
+map(i -> i^2, 1:10)
+
+# ╔═╡ 22462e07-cd16-4f8c-bc1d-62c10338138e
+map(1:10) do i
+	i^2
+end
+
+# ╔═╡ cb06fdf8-2a78-4aae-b77f-f6b0e6b74c8d
+md"""
+**Ejercicio:** La función `sum` acepta como primer argumento una función que aplicar al array antes de sumarlo. Usa la función `esprimo` para calcular la suma de los primos menores de 10000 y guardarla en la variable `suma_primos`.
+"""
+
+# ╔═╡ cbbbb33a-48b4-4ac8-94d9-998604865f75
+
+
+# ╔═╡ b26096b6-a64c-4b4b-bcda-643bae44f938
+if @isdefined(suma_primos)
+	if suma_primos == 5736396
+		"""
+		<p style="background-color: #dbf2d7; padding: 20px;"> ¡Bien calculado! </p>
+		""" |> HTML
+	else
+		"""
+		<p style="background-color: #f2d7d7; padding: 20px;"> Esa no es la respuesta. </p>
+		""" |> HTML
+	end
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> De momento nada. </p>
+	""" |> HTML
+end
+
+# ╔═╡ 3525cd28-bf44-494c-b922-220255a7546d
+md"""
+## Aplicar funciones a un array
+"""
+
+# ╔═╡ 2928b940-0ec1-43f4-a38b-fa233cd943c5
+md"""
+Usando un punto, podemos aplicar funciones elemento a elemento.
+"""
+
+# ╔═╡ 055bd3e1-07d0-4382-ab56-39a12ee3359f
+[1,2,3,4,5,6] .+ 5
+
+# ╔═╡ e09671ac-aadb-4147-b2c1-d2b616272579
+sin.([1,2,3,4,5,6])
+
+# ╔═╡ fd99e1c1-7461-4596-86b1-1bb5c3ce68e8
+md"""
+## Duck typing y multiple dispatch
+"""
+
+# ╔═╡ cfb296b7-6ba9-4add-9209-99ef5eda0566
+function ⋆(a, b)
+	a * b - b * a
+end
+
+# ╔═╡ ec1b26de-abc0-4484-9d99-02c6904d7528
+function ⋆(a)
+	a ⋆ a
+end
+
+# ╔═╡ acd0b52b-21bc-4412-967a-0b6f0a24b671
+function ⋆(a :: Number, b :: Number)
+	0
+end
+
+# ╔═╡ f66be710-8b06-4d15-ba35-253df1b7f957
+methods(⋆)
+
+# ╔═╡ 9bbdf9a9-aa3b-4b64-a51d-e3fbec45a295
+9 ⋆ 6
+
+# ╔═╡ 00dff12f-17bf-4945-9452-6e02ddaf23d5
+[9 4; 3 4] ⋆ [23 5; 23 65]
+
+# ╔═╡ adaccc43-78d2-4f87-ab93-a7762d25bf24
+@which 9 ⋆ 5
+
+# ╔═╡ b1488dcf-93c0-4082-9e04-d494754d0d69
+md"""
+# Suficiente teoría, vamos a por una aplicación...
+### veamos si puedo mejorar un poco al mus.
+"""
+
+# ╔═╡ 8d9f61c7-7139-4c36-8b9e-978543314405
+md"""
+## Primero creamos un struct para las cartas
+"""
+
+# ╔═╡ 6183a84a-34e7-4f94-86b2-083d6c2db2c4
+md"""
+Estructura de datos para las cartas.
+"""
+
+# ╔═╡ c9c7d916-7f3d-4875-bcc5-c013b7299045
+begin
+	struct Carta
+		palo :: Char
+		n :: Int64
+		val :: Int64
+		
+		Carta(p, n) = let
+			p ∉ ['b', 'o', 'c', 'e'] && error("Palo inválido")
+			n ∉ vcat(1:7, 10:12) && error("Número inválido")
+			val = if n >= 10
+				10
+			elseif n <= 2
+				n = 1
+				1
+			elseif n == 3
+				n = 12
+				10
+			else
+				n
+			end
+			new(p, n, val)
+		end
+	end
+	
+	function Base.show(io::IO, c :: Carta)
+		print(io, c.palo, c.n)
+	end
+end
+
+# ╔═╡ 2790472a-916a-42bc-8586-458ddb186ff9
+md"""
+Alias para un `Vector` de `Carta`s
+"""
+
+# ╔═╡ bed73ce5-9c87-4c6d-80db-9c58671fc9a7
+Mano = Vector{Carta}
+
+# ╔═╡ 55675e1a-4b00-4be6-80a3-f44e1248b39d
+md"""
+## Ahora vamos a crear la baraja de cartas
+"""
+
+# ╔═╡ 870894bc-1a14-4a6f-a10c-8db34ef46c14
+baraja = [Carta(c, n) for c in ['b', 'o', 'c', 'e'], n in vcat(1:7, 10:12)]
+
+# ╔═╡ 8a290175-4edd-4640-9715-985607748633
+md"""
+Podemos sacar manos de esta baraja con la función `rand`:
+"""
+
+# ╔═╡ 4cd767d8-2208-4339-9858-4c3e7eb22fda
+rand(baraja, 4)
+
+# ╔═╡ c9fef568-40b3-4078-a3b2-3a10264143b8
+md"""
+## Extendemos un par de funciones de Julia para que sepan trabajar con manos
+"""
+
+# ╔═╡ f9acb404-930c-40ea-85ae-e0e515140016
+function Base.sum(a :: Mano)
+	sum(i->i.val, a)
+end
+
+# ╔═╡ ea8674c4-b1ac-4731-acc3-1849b06ed008
+contourf(0:0.1:10, 0:0.1:10, (x,y) -> sum(i -> cos(i*y)*sin(i*x), 1:n))
+
+# ╔═╡ 50a54011-37db-44b7-9782-61d832dc473e
+function Base.count(n, a :: Mano)
+	sum(i -> i.n == n, a)
+end
+
+# ╔═╡ 2fd1094f-5d89-43a7-9653-1ae834f654ba
+sum([Carta('e', 12), Carta('b', 2), Carta('e', 6), Carta('o', 3)])
+
+# ╔═╡ d744b049-ebe9-459c-a86f-4b424977115f
+count(7, [Carta('o', 7), Carta('c', 6), Carta('b', 10), Carta('b', 7)])
 
 # ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
 a = "Hello world"
+
+# ╔═╡ 1a29a065-bf3f-4616-8f2d-8e29b69aed78
+a = 2
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1349,8 +1570,6 @@ version = "0.9.1+5"
 # ╠═b85f28bd-5434-421a-8515-28f1cc6d8714
 # ╟─321787be-e811-47ec-8b13-b1588e2367b1
 # ╠═5d26b738-d2b8-4900-9ccf-9264c4c4392b
-# ╟─cffeff3e-654b-4dc7-be74-80592cb52574
-# ╠═617a97f3-48c4-4aa9-80a9-cc4263da8bee
 # ╟─9bf78030-cd30-488f-b35a-4ffc5e537d79
 # ╠═48b835b7-a4fd-4465-bc07-6198cd8b51f8
 # ╟─2c6a456d-d194-4d68-b582-4e25e84fcc59
@@ -1358,5 +1577,46 @@ version = "0.9.1+5"
 # ╟─84f83d91-33e8-4b0a-bd5a-e93723799fb1
 # ╠═b97409f1-69bc-4a16-bdf5-98734b8f5593
 # ╟─3015c2e3-26f5-48a7-a497-f56fde124f32
+# ╟─aecd946c-98db-4b16-abf6-4559ee02139b
+# ╠═16d65d01-f3b4-4ba7-8a7e-1d46b1a92a2b
+# ╠═962092e4-dd08-44dd-abb9-ab2fa3adab75
+# ╠═1b1893c6-6375-4a14-b8e2-ebccd00273d5
+# ╟─05707949-1ddd-457d-85c0-f82f66164ce3
+# ╠═c86fd424-a551-49b2-95c3-fe57be553175
+# ╟─b0fba7f9-0331-41b2-88e7-d48dc42b6f19
+# ╟─1cbe625f-0c12-402e-87a4-550bb04ae4dc
+# ╟─6de52598-a552-4778-837c-f813b4820c9a
+# ╠═8ddcf06f-21ab-4113-b656-676447bf1150
+# ╠═22462e07-cd16-4f8c-bc1d-62c10338138e
+# ╟─cb06fdf8-2a78-4aae-b77f-f6b0e6b74c8d
+# ╠═cbbbb33a-48b4-4ac8-94d9-998604865f75
+# ╟─b26096b6-a64c-4b4b-bcda-643bae44f938
+# ╟─3525cd28-bf44-494c-b922-220255a7546d
+# ╟─2928b940-0ec1-43f4-a38b-fa233cd943c5
+# ╠═055bd3e1-07d0-4382-ab56-39a12ee3359f
+# ╠═e09671ac-aadb-4147-b2c1-d2b616272579
+# ╟─fd99e1c1-7461-4596-86b1-1bb5c3ce68e8
+# ╠═cfb296b7-6ba9-4add-9209-99ef5eda0566
+# ╠═ec1b26de-abc0-4484-9d99-02c6904d7528
+# ╠═acd0b52b-21bc-4412-967a-0b6f0a24b671
+# ╠═f66be710-8b06-4d15-ba35-253df1b7f957
+# ╠═9bbdf9a9-aa3b-4b64-a51d-e3fbec45a295
+# ╠═00dff12f-17bf-4945-9452-6e02ddaf23d5
+# ╠═adaccc43-78d2-4f87-ab93-a7762d25bf24
+# ╟─b1488dcf-93c0-4082-9e04-d494754d0d69
+# ╟─8d9f61c7-7139-4c36-8b9e-978543314405
+# ╟─6183a84a-34e7-4f94-86b2-083d6c2db2c4
+# ╠═c9c7d916-7f3d-4875-bcc5-c013b7299045
+# ╟─2790472a-916a-42bc-8586-458ddb186ff9
+# ╠═bed73ce5-9c87-4c6d-80db-9c58671fc9a7
+# ╟─55675e1a-4b00-4be6-80a3-f44e1248b39d
+# ╠═870894bc-1a14-4a6f-a10c-8db34ef46c14
+# ╟─8a290175-4edd-4640-9715-985607748633
+# ╠═4cd767d8-2208-4339-9858-4c3e7eb22fda
+# ╟─c9fef568-40b3-4078-a3b2-3a10264143b8
+# ╠═f9acb404-930c-40ea-85ae-e0e515140016
+# ╠═50a54011-37db-44b7-9782-61d832dc473e
+# ╠═2fd1094f-5d89-43a7-9653-1ae834f654ba
+# ╠═d744b049-ebe9-459c-a86f-4b424977115f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
