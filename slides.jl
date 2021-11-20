@@ -15,7 +15,7 @@ macro bind(def, element)
 end
 
 # ╔═╡ b25eb59b-cc0a-4114-a1c9-2d2e8e69682a
-using Plots, PlutoUI
+using Plots, PlutoUI, LinearAlgebra
 
 # ╔═╡ 8a54d4d1-2205-4e27-96e2-ef7d61b4655a
 macro term_str(str)
@@ -86,70 +86,210 @@ md"""
 En este taller, todo se realizará desde el navegador, pero todo lo que se explique es aplicable fuera de Pluto.
 """
 
+# ╔═╡ 83a03ea0-f927-4322-9b03-435a5b37f31d
+md"""
+# ¿Por qué Pluto.jl?
+"""
+
+# ╔═╡ 55ee5fb4-1494-4783-8670-c937ac4a56a4
+md"""
+### Interactivo
+"""
+
+# ╔═╡ bf0deb8b-bdc7-4acb-acfa-aa910f3b4956
+@bind n Slider(1:10)
+
+# ╔═╡ e044f1ec-89c7-46d8-b9d6-513de17292f5
+md"""
+### Reactivo
+"""
+
+# ╔═╡ ea8674c4-b1ac-4731-acc3-1849b06ed008
+contourf(0:0.1:10, 0:0.1:10, (x,y) -> sum(i -> cos(-i/2*y)*sin(i*x), 1:n))
+
+# ╔═╡ ff4bebb2-8414-4fec-91f4-74fc35070f95
+md"""
+# ¿La pega?
+"""
+
+# ╔═╡ d7b35ada-f73e-4c82-a89c-b21883010a16
+md"""
+No se pueden asignar variables varias veces.
+"""
+
+# ╔═╡ e982305a-53b0-4a93-90ce-e617892521a4
+md"""
+No se puede meter más de una expresión en una celda.
+"""
+
+# ╔═╡ 9c8b0399-4aa1-469a-80c8-3dac58497e83
+b = 2
+b + 1
+
 # ╔═╡ 9695e6ee-16da-4ecd-8dfe-86153487a2fd
 md"""
 # Variables
 """
 
-# ╔═╡ 23e5af19-8256-4b45-b100-15c38da31659
-@bind key Select(["Int64", "Float64", "String", "Char"], default="String")
+# ╔═╡ 6d37f7ba-b35d-45f3-8609-c95e244b1682
+starting_variable = "Hello world!"
 
-# ╔═╡ e51c30c0-adcc-4a9b-9d85-4f02229afb22
+# ╔═╡ 1b41788c-9028-4957-9033-9e0ba3167209
+typeof(starting_variable)
+
+# ╔═╡ b4161298-52f7-48fc-a144-0ee3e1355c50
 md"""
-### Arrays
+Podemos usar unicode en los nombres de variables:
 """
 
-# ╔═╡ 243101d0-c623-479e-8168-c9179a2653d1
-A = [1,2,3,4,5]
+# ╔═╡ c14f9d7d-afe7-40fd-ad13-8c7904c0a5d0
+χ = 1.5
 
-# ╔═╡ 72b8fef7-5c68-4a67-abaa-53ff3e728e5b
-typeof(A)
-
-# ╔═╡ 56b20321-5ea7-40b1-8dc0-c8d8f838cb94
-B = [1 0; 0 1]
-
-# ╔═╡ ee05d490-6c42-426a-9a51-c9b423852982
-typeof(B)
-
-# ╔═╡ 70a927b7-faad-4b31-a08a-20649b63d038
+# ╔═╡ 43a6d32e-2071-4a73-8e76-3e99e064cd0f
 md"""
-### Tuplas
+**Ejercicio:** Declara una variable llamada `Δx` de tipo float:
 """
 
-# ╔═╡ a8bad0e1-e900-48b8-8686-80b32703b071
-md"""
-### Structs
-"""
+# ╔═╡ 35f3c255-c75b-4e22-a3d3-b529fc889777
 
-# ╔═╡ 77bf65d2-03b8-4279-bfa2-54f46ccde29a
-struct Point
-	x :: Float64
-	y :: Float64
+
+# ╔═╡ 747d501f-88e0-4afa-94eb-fa653b07ad7f
+if @isdefined(Δx) && typeof(Δx) == Float64
+	"""
+	<p style="background-color: #dbf2d7; padding: 20px;"> ¡Hecho! Tu variable es Δx = $(repr(Δx)) </p>
+	""" |> HTML
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Todavía no hay ninguna variable como la que te he pedido. :( </p>
+	""" |> HTML
 end
 
-# ╔═╡ c259dbcc-df1d-445d-a3ec-50461d37a82f
-P = Point(0,0)
-
-# ╔═╡ ad213879-6fcf-4b3b-89d9-95d4ffe9b062
-values = Dict("Int64" => 5, "Float64" => 3.14159265, "String" => "Hola mundo", "Char" => 'α');
-
-# ╔═╡ 98f627f3-7ad5-4d23-b44a-4010e31e6b63
-α = values[key]
-
-# ╔═╡ b8a0d83b-52f7-4af3-9e32-1f711260462c
-mitupla = α, 2
-
-# ╔═╡ a0dc0bcf-4c4a-45be-8a8c-ae063bbcd6f4
-typeof(mitupla)
-
-# ╔═╡ 83a03ea0-f927-4322-9b03-435a5b37f31d
+# ╔═╡ 82dbe43b-38c8-4a32-bf5d-c4f92c88ad2b
 md"""
-# Estructuras de control
+# Arrays y matrices
 """
+
+# ╔═╡ 1846c4ce-2586-4f66-ab98-76d4556b10d8
+md"""
+Supongo que todos adoráis el álgebra lineal, así que pongamos un ejemplo con rotaciones.
+"""
+
+# ╔═╡ f672ec41-87a8-4683-85f7-ca64ec4c14e8
+v = [1,1.2]
+
+# ╔═╡ ef1b6076-aabe-49fb-930c-d6376456424d
+@bind θ Slider(0:0.01:2π)
+
+# ╔═╡ 9a4b8ad2-bdc7-4807-a93d-5b400171090a
+A = [cos(θ) -sin(θ); sin(θ) cos(θ)]
+
+# ╔═╡ 0bc668f4-f1e3-4c1f-a5b9-92ac36c5b7ec
+Av = A*v
+
+# ╔═╡ a6fdf423-32bd-4cab-8d80-efd72b842f44
+let
+	l = norm(v)
+	plot([(0,0), Tuple(Av)], ratio=1, xlim=(-l, l), ylim=(-l, l), arrow=true, leg=false)
+	plot!((t -> l.*(sin(t), cos(t))).(0:0.01:2π), line=:dash)
+end
+
+# ╔═╡ ddfbd42e-726e-4e79-a706-42c5d094d022
+md"""
+## Un ejercicio rápido
+"""
+
+# ╔═╡ 4b0cb049-aead-4f4d-8e41-7b09878ca687
+md"""
+Suficiente álgebra por ahora, ¿qué tal si vamos a por perretes?
+"""
+
+# ╔═╡ 8972f14f-ffa4-43bc-9d90-ad8e1782c5d4
+Resource("https://http2.mlstatic.com/golden-retriever-cachorros-de-calidad-D_NQ_NP_122701-MLM20388012180_082015-F.jpg")
+
+# ╔═╡ fa6f7212-f1ee-4798-b81c-330cd5e5f642
+md"""
+**Ejercicio:** Declara una lista de 3 elementos llamada `nombres` con nombres de perros:
+"""
+
+# ╔═╡ 0f8a4c74-c92c-48a2-b53b-8f07e7e6ed46
+
+
+# ╔═╡ cec20129-37fb-4e9f-9b5c-f0c13683f4e6
+if @isdefined(nombres)
+	if typeof(nombres) == Vector{String} && length(nombres) == 3
+		"""
+		<p style="background-color: #dbf2d7; padding: 20px;"> ¡Hecho! Seguro que $(rand(nombres)) sería un perro super cariñoso. </p>
+		""" |> HTML
+	else
+		"""
+		<p style="background-color: #f2d7d7; padding: 20px;"> O no son nombres, o no son tres, sigue intentándolo. </p>
+		""" |> HTML
+	end
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Todavía no hay ninguna variable como la que te he pedido. Los perretes están tristes. </p>
+	""" |> HTML
+end
+
+# ╔═╡ 688e8e2e-b243-4aff-a8c2-d7704962fbe4
+md"""
+# Structs
+"""
+
+# ╔═╡ 5392a77c-6176-47b7-aabe-d1f94a710a26
+md"""
+A ver, está claro que un perro no está dado solo por un nombre, tiene más cosas que lo definen. Así que vamos a crear `Perro`s.
+"""
+
+# ╔═╡ 60b42a94-9988-48ca-909f-46f3fab313b2
+struct Perro
+	nombre :: String
+	edad :: Int64
+	raza
+end
+
+# ╔═╡ f9a72f4a-1e72-4888-9a69-f658fe532b38
+toby = Perro("Toby", 2, "Golden Retriever")
+
+# ╔═╡ ef1c68ad-e694-42c0-a840-90a96f9e9423
+md"""
+**Ejercicio:** Toby se siente solo, ¿qué tal si creas un `Dueño` para que cuide de su `perro`?
+"""
+
+# ╔═╡ 1da27f26-53d9-4168-924f-9282aa577e05
+
+
+# ╔═╡ 2d6ed22c-8152-4b87-b339-4c74b4aa110b
+if @isdefined(Dueño)
+	if !(:perro in fieldnames(Dueño))
+		"""
+		<p style="background-color: #f2d7d7; padding: 20px;"> Dueño existe, pero no parece que tenga perro. </p>
+		""" |> HTML
+	elseif findfirst(fieldnames(Dueño) .== :perro) == findfirst(fieldtypes(Dueño) .== Perro)
+		"""
+		<p style="background-color: #dbf2d7; padding: 20px;"> ¡Bien! Así se harán compañía el uno al otro. </p>
+		""" |> HTML
+	else
+		"""
+		<p style="background-color: #f2d7d7; padding: 20px;"> ¿Por qué el perro del dueño es un pato?. </p>
+		""" |> HTML
+	end
+else
+	"""
+	<p style="background-color: #f2d7d7; padding: 20px;"> Toby se siente solo... </p>
+	""" |> HTML
+end
+
+# ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
+a = "Hello world"
+
+# ╔═╡ 1a29a065-bf3f-4616-8f2d-8e29b69aed78
+a = 2
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
@@ -998,21 +1138,44 @@ version = "0.9.1+5"
 # ╟─b22e4c7c-50ac-444a-b499-10c33d156706
 # ╟─6e369c48-4d33-4908-b724-929351f269c4
 # ╟─202e8696-6bf9-4b56-88d9-beb0e559abb0
-# ╟─9695e6ee-16da-4ecd-8dfe-86153487a2fd
-# ╟─23e5af19-8256-4b45-b100-15c38da31659
-# ╠═98f627f3-7ad5-4d23-b44a-4010e31e6b63
-# ╟─e51c30c0-adcc-4a9b-9d85-4f02229afb22
-# ╠═243101d0-c623-479e-8168-c9179a2653d1
-# ╟─72b8fef7-5c68-4a67-abaa-53ff3e728e5b
-# ╠═56b20321-5ea7-40b1-8dc0-c8d8f838cb94
-# ╟─ee05d490-6c42-426a-9a51-c9b423852982
-# ╟─70a927b7-faad-4b31-a08a-20649b63d038
-# ╠═b8a0d83b-52f7-4af3-9e32-1f711260462c
-# ╟─a0dc0bcf-4c4a-45be-8a8c-ae063bbcd6f4
-# ╟─a8bad0e1-e900-48b8-8686-80b32703b071
-# ╠═77bf65d2-03b8-4279-bfa2-54f46ccde29a
-# ╠═c259dbcc-df1d-445d-a3ec-50461d37a82f
-# ╟─ad213879-6fcf-4b3b-89d9-95d4ffe9b062
 # ╟─83a03ea0-f927-4322-9b03-435a5b37f31d
+# ╟─55ee5fb4-1494-4783-8670-c937ac4a56a4
+# ╠═bf0deb8b-bdc7-4acb-acfa-aa910f3b4956
+# ╟─e044f1ec-89c7-46d8-b9d6-513de17292f5
+# ╟─ea8674c4-b1ac-4731-acc3-1849b06ed008
+# ╟─ff4bebb2-8414-4fec-91f4-74fc35070f95
+# ╟─d7b35ada-f73e-4c82-a89c-b21883010a16
+# ╠═1a29a065-bf3f-4616-8f2d-8e29b69aed78
+# ╠═63424371-bc00-457a-aaeb-7b8f4f573839
+# ╟─e982305a-53b0-4a93-90ce-e617892521a4
+# ╠═9c8b0399-4aa1-469a-80c8-3dac58497e83
+# ╟─9695e6ee-16da-4ecd-8dfe-86153487a2fd
+# ╠═6d37f7ba-b35d-45f3-8609-c95e244b1682
+# ╠═1b41788c-9028-4957-9033-9e0ba3167209
+# ╟─b4161298-52f7-48fc-a144-0ee3e1355c50
+# ╠═c14f9d7d-afe7-40fd-ad13-8c7904c0a5d0
+# ╟─43a6d32e-2071-4a73-8e76-3e99e064cd0f
+# ╠═35f3c255-c75b-4e22-a3d3-b529fc889777
+# ╟─747d501f-88e0-4afa-94eb-fa653b07ad7f
+# ╟─82dbe43b-38c8-4a32-bf5d-c4f92c88ad2b
+# ╟─1846c4ce-2586-4f66-ab98-76d4556b10d8
+# ╠═f672ec41-87a8-4683-85f7-ca64ec4c14e8
+# ╠═ef1b6076-aabe-49fb-930c-d6376456424d
+# ╠═9a4b8ad2-bdc7-4807-a93d-5b400171090a
+# ╠═0bc668f4-f1e3-4c1f-a5b9-92ac36c5b7ec
+# ╟─a6fdf423-32bd-4cab-8d80-efd72b842f44
+# ╟─ddfbd42e-726e-4e79-a706-42c5d094d022
+# ╟─4b0cb049-aead-4f4d-8e41-7b09878ca687
+# ╟─8972f14f-ffa4-43bc-9d90-ad8e1782c5d4
+# ╟─fa6f7212-f1ee-4798-b81c-330cd5e5f642
+# ╠═0f8a4c74-c92c-48a2-b53b-8f07e7e6ed46
+# ╟─cec20129-37fb-4e9f-9b5c-f0c13683f4e6
+# ╟─688e8e2e-b243-4aff-a8c2-d7704962fbe4
+# ╟─5392a77c-6176-47b7-aabe-d1f94a710a26
+# ╠═60b42a94-9988-48ca-909f-46f3fab313b2
+# ╠═f9a72f4a-1e72-4888-9a69-f658fe532b38
+# ╟─ef1c68ad-e694-42c0-a840-90a96f9e9423
+# ╠═1da27f26-53d9-4168-924f-9282aa577e05
+# ╟─2d6ed22c-8152-4b87-b339-4c74b4aa110b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
