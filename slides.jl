@@ -417,7 +417,7 @@ md"""
 md"""
 **Ejercicio:** Se acerca la Navidad, ayuda a Santa Claus a clasificar a los niños según hayan sido buenos (`Regalos`) o malos (`Carbón`) en su lista `esbueno`. Su criterio es algo arbitrario, son malos los niños cuyo nombre empiece por J.
 
-Ejemplo: `["María", "Juanito"]` -> `[true, false]`
+Ejemplo: `["María", "Juanito"]` -> `["Regalos", "Carbón"]`
 """
 
 # ╔═╡ 84f83d91-33e8-4b0a-bd5a-e93723799fb1
