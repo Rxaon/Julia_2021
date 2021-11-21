@@ -24,15 +24,18 @@ macro term_str(str)
 	end
 end;
 
-# ╔═╡ 5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
-# Activar modo presentación al cargar cuaderno
-html"<script>present()</script>"
-
 # ╔═╡ c291a723-6073-4f72-a0dd-2ede90f43313
 html"""<p style="font-size:400%;">Taller de introducción a...</p>"""
 
 # ╔═╡ b3801d03-e1f1-45f0-b88f-f450c9346dc4
 Resource("https://julialang.org/assets/infra/logo.svg", :width => 1000)
+
+# ╔═╡ 5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
+# Activar modo presentación al cargar cuaderno
+html"<script>present()</script>"
+
+# ╔═╡ f5384a99-7f34-4088-9cd2-c0f68a7c9d57
+TableOfContents(aside=true, depth=1)
 
 # ╔═╡ 38d65d9e-1e20-11ec-25ad-914b73e1a7aa
 md"""
@@ -56,7 +59,7 @@ html"""
 
 # ╔═╡ 82bd635f-4a61-403e-a4bf-748ae47415a7
 md"""
-# Instalar Pluto.jl
+# Pluto.jl
 """
 
 # ╔═╡ eb05504a-abb5-46da-8519-e5d76d6d1786
@@ -319,7 +322,7 @@ end
 
 # ╔═╡ fb7e8bb1-7810-4ed2-aa25-d8426e9ecd30
 md"""
-Creo que la respuesta es $(@bind sol_if Select(["Explota", "42", "69", "No quiero opinar"], default="No quiero opinar"))
+Creo que la respuesta es $(@bind sol_if Select(["Explota", "42", "69", ""], default=""))
 """
 
 # ╔═╡ e2701a41-99c2-4c86-a561-d18b25802808
@@ -572,7 +575,7 @@ md"""
 
 # ╔═╡ 8d9f61c7-7139-4c36-8b9e-978543314405
 md"""
-## Primero creamos un struct para las cartas
+## Struct para las cartas
 """
 
 # ╔═╡ 6183a84a-34e7-4f94-86b2-083d6c2db2c4
@@ -620,7 +623,7 @@ Mano = Vector{Carta}
 
 # ╔═╡ 55675e1a-4b00-4be6-80a3-f44e1248b39d
 md"""
-## Ahora vamos a crear la baraja de cartas
+## Crear la baraja de cartas
 """
 
 # ╔═╡ 870894bc-1a14-4a6f-a10c-8db34ef46c14
@@ -636,7 +639,7 @@ rand(baraja, 4)
 
 # ╔═╡ c9fef568-40b3-4078-a3b2-3a10264143b8
 md"""
-## Extendemos un par de funciones de Julia para que sepan trabajar con manos
+## Extender funciones de Julia
 """
 
 # ╔═╡ f9acb404-930c-40ea-85ae-e0e515140016
@@ -657,6 +660,240 @@ sum([Carta('e', 12), Carta('b', 2), Carta('e', 6), Carta('o', 3)])
 
 # ╔═╡ d744b049-ebe9-459c-a86f-4b424977115f
 count(7, [Carta('o', 7), Carta('c', 6), Carta('b', 10), Carta('b', 7)])
+
+# ╔═╡ 0152270c-31a2-4a1a-87b7-95975adfb885
+md"""
+## ¿Qué mano gana a grandes?
+"""
+
+# ╔═╡ c741b5f8-123a-43a1-9b65-d6f133563b3a
+function grandes(a :: Mano, b :: Mano, a_mano = true)
+	n = 12
+	grandes_a = count(n, a)
+	grandes_b = count(n, b)
+	while grandes_a == grandes_b && n > 4
+		n -= 1
+		grandes_a = count(n, a)
+		grandes_b = count(n, b)
+	end
+	if grandes_a == grandes_b
+		a_mano
+	else
+		grandes_a > grandes_b
+	end
+end
+
+# ╔═╡ 17d56da4-9375-4d9e-83e2-7bc4b89d3194
+md"""
+## ¿Qué mano gana a chicas?
+"""
+
+# ╔═╡ cab1e192-ff5c-4879-a848-e08af83e3050
+function chicas(a :: Mano, b :: Mano, a_mano = true)
+	n = 3
+	chicas_a = count(1, a)
+	chicas_b = count(1, b)
+	while chicas_a == chicas_b && n < 11
+		n += 1
+		chicas_a = count(n, a)
+		chicas_b = count(n, b)
+	end
+	if chicas_a == chicas_b
+		a_mano
+	else
+		chicas_a > chicas_b
+	end
+end
+
+# ╔═╡ 7e0568f8-e4cb-44d1-b5d8-ae405528db7f
+md"""
+## ¿Cómo localizamos los pares?
+"""
+
+# ╔═╡ c41419db-d41b-457a-aa43-c104f33e0622
+function score_par(a :: Mano)
+	rep = [count(c.n, a) for c in a]
+	pares = a[rep .!= 1]
+	length(pares), pares
+end
+
+# ╔═╡ 4ea2b3ca-3048-4e26-b5ef-f1cf4b7340a9
+score_par(rand(baraja, 4))
+
+# ╔═╡ 8e119d99-6c03-478d-a44c-ab17be14b8d6
+function pares(a :: Mano, b :: Mano, amano = true)
+	score_a = score_par(a)
+	score_b = score_par(b)
+	if score_a[1] == 0
+		false
+	elseif score_a[1] == score_b[1]
+		grandes(score_a[2], score_b[2], amano)
+	else
+		score_a[1] > score_b[1]
+	end
+end
+
+# ╔═╡ 481d10ad-bde1-45f3-9cd0-9c4d3c3d9ec5
+md"""
+## ¿Y qué pasa con el juego?
+"""
+
+# ╔═╡ 711e4d75-7788-4240-85c4-d02b7b34d1b7
+function juego(a :: Mano, b :: Mano, amano = true)
+	prioridades = [31, 32, 40, 37, 36, 35, 34, 33]
+	score_a = findfirst(sum(a) .== prioridades)
+	score_b = findfirst(sum(b) .== prioridades)
+	if isnothing(score_a)
+		false
+	elseif isnothing(score_b)
+		true
+	elseif score_a == score_b
+		if count(7, a) == 3
+			true
+		elseif count(7, b) == 3
+			false
+		else
+			amano
+		end
+	else
+		score_a < score_b
+	end
+end
+
+# ╔═╡ 4f8ef523-9b93-4c98-b1f2-03119a961437
+md"""
+## Juntemos todo y tenemos...
+"""
+
+# ╔═╡ 3e5f2002-6d53-4332-ad93-b2d48bfaa929
+@bind refresh Button("Dar nuevas")
+
+# ╔═╡ ade8b527-c1c9-43f7-a0f4-7adb25814347
+md"""
+Soy mano $(@bind amano CheckBox(default=true))
+"""
+
+# ╔═╡ 9ba53c62-9dd4-4b54-b1a0-4ccd26c32768
+begin
+	refresh
+	mano = rand(baraja, 4)
+end
+
+# ╔═╡ 0bf4efe6-a8c8-4b78-87f0-2ee91dbbe131
+let
+	n = 10000
+	restantes = setdiff(baraja, mano)
+
+	bar(
+		["Grandes", "Chicas", "Pares", "Juego"],
+		[
+			count(i -> grandes(mano, rand(restantes, 4), amano), 1:n)/n,
+			count(i -> chicas(mano, rand(restantes, 4), amano), 1:n)/n,
+			count(i -> pares(mano, rand(restantes, 4), amano), 1:n)/n,
+			count(i -> juego(mano, rand(restantes, 4), amano), 1:n)/n
+		],
+		ylim=(0,1), leg=false, title="Probabilidad de ganar " * (amano ? "con mano" : "sin mano")
+	)
+end
+
+# ╔═╡ 4ab39fbf-e7ab-43c6-9277-0ad776161633
+md"""
+¿Una partida? Apuesto a $(@bind apuesta Select(["", "Grandes", "Chicas", "Pares", "Juego"]))
+"""
+
+# ╔═╡ f510c652-6e3a-4520-a546-3fc8353102a2
+let
+	rival = rand(setdiff(baraja, mano), 4)
+	victoria = if apuesta == "Grandes"
+		grandes(mano, rival, amano)
+	elseif apuesta == "Chicas"
+		chicas(mano, rival, amano)
+	elseif apuesta == "Pares"
+		score_par(mano)[1] == 0 && error("No tienes pares")
+		pares(mano, rival, amano)
+	elseif apuesta == "Juego"
+		sum(mano) < 31 && error("No tienes juego")
+		juego(mano, rival, amano)
+	end
+	if !isnothing(victoria)
+		"La mano de tu rival ha sido <b>$(join(rival, ' '))</b> por lo que has " * (victoria ? "ganado." : "perdido.") |> HTML
+	end
+end	
+
+# ╔═╡ 0c939270-fc42-4f7b-98b3-93651d693acc
+md"""
+# Material adicional
+"""
+
+# ╔═╡ cb2655b5-4089-4a00-916c-990159d0f065
+md"""
+En Julia ya hay un montón de cosas hechas, sobre todo para ciencias. Os recomiendo echar un vistazo a (sin ningún orden en particular):
+"""
+
+# ╔═╡ d409164f-df15-485e-9e57-aaab2df0570d
+md"""
+* Plots
+* Unitful
+* Measurements
+* ModelingToolkit
+* DifferentialEquations
+* QuadGK
+* GLM
+* BenchmarkTools
+* IJulia
+* Distributions
+* Statistics
+* LinearAlgebra
+* JuMP
+* DataFrames
+* CSV
+* Symbolics
+* ForwardDiff
+"""
+
+# ╔═╡ 046bb1ad-136b-4c39-955c-f26e85b5d7dc
+md"""
+# Contacto
+"""
+
+# ╔═╡ db80bfe7-1f87-4cd0-b34b-0d62d19ee9d1
+md"""
+Espero que os haya gustado, si os habéis quedado con alguna duda podéis contactarme en [jorge.rodriguez@alumnos.uva.es](mailto:jorge.rodriguez@alumnos.uva.es).
+"""
+
+# ╔═╡ 87809afd-529c-448f-9b19-66cf204e95ce
+function chao(t)
+	# c
+	if 0 <= t <= 1
+		0.3 .* (cos(4.5*t+1), sin(4.3*t+1))
+	# h
+	elseif 1 < t <= 1.25
+		(0.4, -4+4*t)
+	elseif 1.25 < t <= 1.58
+		(0.4, 6-4*t)
+	elseif 1.58 < t <= 2.5
+		(0.6, 0.2) .+ 0.2 .* (-cos(3.4*(t - 1.58)), sin(3.4*(t - 1.58)))
+	elseif 2.5 < t <= 3
+		(0.8, 0.2) .+ (t-2.5) .* (0, -1)
+
+	# a
+	elseif 3 < t <= 4
+		(1.2, 0) .+ 0.3 .* (cos(10*t - 2.3), sin(10.05*t - 2.3))
+	elseif 4 < t <= 4.2
+		(1.5, 0) .+ (t-4) .* (0, 1.5)
+	elseif 4.2 < t <= 4.5
+		(1.5, 0.3) .+ (t-4) .* (0, -1.2)
+
+	# o
+	elseif 4.2 < t <= 5.5
+		(1.9, 0) .+ 0.3 .* (sin(10*t - 2.3), cos(10*t - 2.3))
+	end
+end;
+
+# ╔═╡ 32f32ea5-36c8-46f1-a30b-ebd2a52abe20
+@gif for i in 0:0.05:5.5
+	plot(chao.(0:0.01:i), ratio=1, xlim=(-0.5, 2.5), ylim=(-0.4, 1.1), axis=false, ticks=false, leg=false)
+end
 
 # ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
 a = "Hello world"
@@ -1504,9 +1741,10 @@ version = "0.9.1+5"
 # ╔═╡ Cell order:
 # ╟─b25eb59b-cc0a-4114-a1c9-2d2e8e69682a
 # ╟─8a54d4d1-2205-4e27-96e2-ef7d61b4655a
-# ╟─5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
 # ╟─c291a723-6073-4f72-a0dd-2ede90f43313
 # ╟─b3801d03-e1f1-45f0-b88f-f450c9346dc4
+# ╟─5c7d2cdd-f334-4ad0-8bd6-99da3ae5d2fb
+# ╟─f5384a99-7f34-4088-9cd2-c0f68a7c9d57
 # ╟─38d65d9e-1e20-11ec-25ad-914b73e1a7aa
 # ╟─21e855da-6750-401a-8eae-e343b2df35d9
 # ╟─4f79ece5-a135-4f93-9273-e17f0e3e9ca0
@@ -1618,5 +1856,29 @@ version = "0.9.1+5"
 # ╠═50a54011-37db-44b7-9782-61d832dc473e
 # ╠═2fd1094f-5d89-43a7-9653-1ae834f654ba
 # ╠═d744b049-ebe9-459c-a86f-4b424977115f
+# ╟─0152270c-31a2-4a1a-87b7-95975adfb885
+# ╠═c741b5f8-123a-43a1-9b65-d6f133563b3a
+# ╟─17d56da4-9375-4d9e-83e2-7bc4b89d3194
+# ╠═cab1e192-ff5c-4879-a848-e08af83e3050
+# ╟─7e0568f8-e4cb-44d1-b5d8-ae405528db7f
+# ╠═c41419db-d41b-457a-aa43-c104f33e0622
+# ╠═4ea2b3ca-3048-4e26-b5ef-f1cf4b7340a9
+# ╠═8e119d99-6c03-478d-a44c-ab17be14b8d6
+# ╟─481d10ad-bde1-45f3-9cd0-9c4d3c3d9ec5
+# ╠═711e4d75-7788-4240-85c4-d02b7b34d1b7
+# ╟─4f8ef523-9b93-4c98-b1f2-03119a961437
+# ╠═3e5f2002-6d53-4332-ad93-b2d48bfaa929
+# ╟─ade8b527-c1c9-43f7-a0f4-7adb25814347
+# ╟─9ba53c62-9dd4-4b54-b1a0-4ccd26c32768
+# ╟─0bf4efe6-a8c8-4b78-87f0-2ee91dbbe131
+# ╟─4ab39fbf-e7ab-43c6-9277-0ad776161633
+# ╟─f510c652-6e3a-4520-a546-3fc8353102a2
+# ╟─0c939270-fc42-4f7b-98b3-93651d693acc
+# ╟─cb2655b5-4089-4a00-916c-990159d0f065
+# ╟─d409164f-df15-485e-9e57-aaab2df0570d
+# ╟─046bb1ad-136b-4c39-955c-f26e85b5d7dc
+# ╟─db80bfe7-1f87-4cd0-b34b-0d62d19ee9d1
+# ╟─87809afd-529c-448f-9b19-66cf204e95ce
+# ╟─32f32ea5-36c8-46f1-a30b-ebd2a52abe20
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
