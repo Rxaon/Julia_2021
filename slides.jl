@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.17.1
+# v0.17.2
 
 using Markdown
 using InteractiveUtils
@@ -446,6 +446,22 @@ sumar2(a, b) = a + b
 
 # ╔═╡ 1b1893c6-6375-4a14-b8e2-ebccd00273d5
 sumar3 = (a, b) -> a + b
+
+# ╔═╡ 705d6c40-4c50-40e2-9681-cb9eae515bc7
+md"""
+Podemos especificar qué tipos acepta una función como argumentos.
+"""
+
+# ╔═╡ aec574d8-fb6a-4491-8ce1-7dfdff10a088
+function square(n :: Number)
+	n^2
+end
+
+# ╔═╡ 7ca240b2-8118-4829-9011-b0674eab3258
+square("Hola")
+
+# ╔═╡ 551c492e-8f02-4b0b-8f10-2862f8b5d334
+"Hola"^2
 
 # ╔═╡ 05707949-1ddd-457d-85c0-f82f66164ce3
 md"""
@@ -895,11 +911,11 @@ end;
 	plot(chao.(0:0.01:i), ratio=1, xlim=(-0.5, 2.5), ylim=(-0.4, 1.1), axis=false, ticks=false, leg=false)
 end
 
-# ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
-a = "Hello world"
-
 # ╔═╡ 1a29a065-bf3f-4616-8f2d-8e29b69aed78
 a = 2
+
+# ╔═╡ 63424371-bc00-457a-aaeb-7b8f4f573839
+a = "Hello world"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1819,6 +1835,10 @@ version = "0.9.1+5"
 # ╠═16d65d01-f3b4-4ba7-8a7e-1d46b1a92a2b
 # ╠═962092e4-dd08-44dd-abb9-ab2fa3adab75
 # ╠═1b1893c6-6375-4a14-b8e2-ebccd00273d5
+# ╟─705d6c40-4c50-40e2-9681-cb9eae515bc7
+# ╠═aec574d8-fb6a-4491-8ce1-7dfdff10a088
+# ╠═7ca240b2-8118-4829-9011-b0674eab3258
+# ╠═551c492e-8f02-4b0b-8f10-2862f8b5d334
 # ╟─05707949-1ddd-457d-85c0-f82f66164ce3
 # ╠═c86fd424-a551-49b2-95c3-fe57be553175
 # ╟─b0fba7f9-0331-41b2-88e7-d48dc42b6f19
